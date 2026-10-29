@@ -65,7 +65,7 @@ with tab_gen:
         headers, sample_rows = [], []
         try:
             reader = csv_mod.reader(io.StringIO(text))
-            headers = next(reader, [])
+            headers = [header.strip() for header in next(reader, [])]
             for k, row in enumerate(reader):
                 sample_rows.append(row)
                 if k >= 5:

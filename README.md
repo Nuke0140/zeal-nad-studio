@@ -84,6 +84,8 @@ Both tabs can be tested instantly with the bundled `sample_data/` files:
 - Subject codes ending in `P` are stripped (practical components)
 - `A. T. K. T` students get CGPA/SGPA cleared; students with any `F` grade too
 - "Pass without CGPA/SGPA" raises a data warning
+- Overall `RESULT` uses `Promotion Note` (or an overall/final result column);
+  if unavailable, it is inferred from subject results and failing grades.
 - `REGN_NO`, `RROLL`, `ABC_ACCOUNT_ID` are forced to Excel **text format**
 - A minimum of **11 subject column slots** is always generated
 - Merge keys are `REGN_NO + RROLL`; non-null re-exam values overwrite the
