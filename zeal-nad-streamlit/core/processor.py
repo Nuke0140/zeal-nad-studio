@@ -177,6 +177,10 @@ def run_generate_report(input_file, log_func, progress_func=None, source_label=N
 
     try:
         reader = csv.DictReader(stream)
+        if reader.fieldnames:
+            reader.fieldnames = [
+                name.strip() if name else name for name in reader.fieldnames
+            ]
         subject_map = extract_subject_map(reader.fieldnames)
         rows = list(reader)
         total_rows = len(rows)

@@ -74,6 +74,8 @@ def normalize_result(r):
     r = (r or "").strip().lower()
     if r == "sem_all_clear": return "Pass"
     if r == "sem_not_allclear": return "A. T. K. T"
+    if "sem_not_allclear" in r: return "A. T. K. T"  # combined ERP value, e.g. "sem_unfair_case,sem_not_allclear"
+    if "sem_all_clear" in r: return "Pass"
     return r.title()
 
 
@@ -222,7 +224,10 @@ def run_generate_report(input_file, log_func, progress_func=None, source_label=N
             nad["MNAME"] = row.get("Mother's First Name")
 
             nad["MRKS_REC_STATUS"] = "O"
-            nad["RESULT"] = normalize_result(row.get("Promotion Note"))
+            # Old ERP exports carry "Promotion Note"; new exports (e.g. IT ODD SEM AY 2025 PAT)
+            # renamed the same field to "Semester Passing State" — fall back to it when absent.
+            raw_result = row.get("Promotion Note") or row.get("Semester Passing State")
+            nad["RESULT"] = normalize_result(raw_result)
             nad["YEAR"] = "2025"
             nad["DOI"] = "18-02-2025"
             nad["SEM"] = sem
@@ -365,8 +370,8 @@ def run_merge_files(odd_sem_file, re_exam_file, log_func, progress_func=None,
                     odd_label=None, re_label=None):
     """Merge a re-exam update workbook back into the odd-semester master.
 
-    Non-blank re-exam values overwrite matching master rows
-    (REGN_NO, RROLL); unmatched re-exam rows are appended.
+    Re-exam values overwrite master rows matching (REGN_NO, RROLL);
+    unmatched re-exam rows are appended. Keys/behaviour unchanged.
 
     Returns dict: {ok, buffer, filename, stats}
     """
@@ -424,7 +429,7 @@ def run_merge_files(odd_sem_file, re_exam_file, log_func, progress_func=None,
         for i, idx in enumerate(common_index):
             for col in odd_df.columns:
                 val = re_df.at[idx, col]
-                if pd.notna(val) and not (isinstance(val, str) and not val.strip()):
+                if pd.notna(val):
                     odd_df.at[idx, col] = val
 
             # Throttled Progress Update

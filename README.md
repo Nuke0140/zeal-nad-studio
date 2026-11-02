@@ -88,9 +88,8 @@ Both tabs can be tested instantly with the bundled `sample_data/` files:
   if unavailable, it is inferred from subject results and failing grades.
 - `REGN_NO`, `RROLL`, `ABC_ACCOUNT_ID` are forced to Excel **text format**
 - A minimum of **11 subject column slots** is always generated
-- Merge keys are `REGN_NO + RROLL`; non-blank re-exam values overwrite the
-  master while blank cells preserve existing values; unmatched re-exam
-  students are appended to the output
+- Merge keys are `REGN_NO + RROLL`; non-null re-exam values overwrite the
+  master; unmatched re-exam students are appended to the output
 
 ## 🎨 UI Notes
 

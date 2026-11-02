@@ -3,7 +3,21 @@ import unittest
 
 import pandas as pd
 
-from core.processor import run_merge_files
+from core.processor import run_generate_report, run_merge_files
+
+
+class GenerateReportTests(unittest.TestCase):
+    def test_promotion_note_header_whitespace_does_not_blank_result(self):
+        source = io.StringIO(
+            "Username,Course Code,Course Name,Full Name,Promotion Note \n"
+            "241001,BTechCSE,B.Tech CSE,Amit Kumar,sem_all_clear\n"
+        )
+
+        result = run_generate_report(source, lambda _: None)
+
+        self.assertTrue(result["ok"])
+        generated = pd.read_excel(result["buffer"], engine="openpyxl")
+        self.assertEqual(generated.loc[0, "RESULT"], "Pass")
 
 
 class MergeFilesTests(unittest.TestCase):
