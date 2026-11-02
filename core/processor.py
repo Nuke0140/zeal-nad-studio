@@ -365,8 +365,8 @@ def run_merge_files(odd_sem_file, re_exam_file, log_func, progress_func=None,
                     odd_label=None, re_label=None):
     """Merge a re-exam update workbook back into the odd-semester master.
 
-    Re-exam values overwrite master rows matching (REGN_NO, RROLL);
-    unmatched re-exam rows are appended. Keys/behaviour unchanged.
+    Non-blank re-exam values overwrite matching master rows
+    (REGN_NO, RROLL); unmatched re-exam rows are appended.
 
     Returns dict: {ok, buffer, filename, stats}
     """
@@ -424,7 +424,7 @@ def run_merge_files(odd_sem_file, re_exam_file, log_func, progress_func=None,
         for i, idx in enumerate(common_index):
             for col in odd_df.columns:
                 val = re_df.at[idx, col]
-                if pd.notna(val):
+                if pd.notna(val) and not (isinstance(val, str) and not val.strip()):
                     odd_df.at[idx, col] = val
 
             # Throttled Progress Update
