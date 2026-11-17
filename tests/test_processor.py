@@ -19,6 +19,37 @@ class GenerateReportTests(unittest.TestCase):
         generated = pd.read_excel(result["buffer"], engine="openpyxl")
         self.assertEqual(generated.loc[0, "RESULT"], "Pass")
 
+    def test_cgpa_is_kept_only_when_registered_and_completed_credits_match(self):
+        source = io.StringIO(
+            "Username,Course Code,Course Name,Full Name,Promotion Note,"
+            "Total Registered Credits,Total Completed Credits,CGPA\n"
+            "241001,BTechCSE,B.Tech CSE,Amit Kumar,sem_all_clear,20,20,8.5\n"
+            "241002,BTechCSE,B.Tech CSE,Neha Kumar,sem_all_clear,24,20,7.5\n"
+        )
+
+        result = run_generate_report(source, lambda _: None)
+
+        self.assertTrue(result["ok"])
+        generated = pd.read_excel(result["buffer"], engine="openpyxl")
+        self.assertEqual(generated.loc[0, "CGPA"], 8.5)
+        self.assertTrue(pd.isna(generated.loc[1, "CGPA"]))
+
+    def test_total_credit_points_comes_from_semester_credit_points(self):
+        source = io.StringIO(
+            "Username,Course Code,Semester Credit Points,"
+            "Subject 1 - Subject - Subject Code,"
+            "Subject 1 - Result - Grade,"
+            "Subject 1 - Result - Grade Points,"
+            "Subject 1 - Result - Credits for Result\n"
+            "241001,BTechCSE,15.5,CSE101,A,8,3\n"
+        )
+
+        result = run_generate_report(source, lambda _: None)
+
+        self.assertTrue(result["ok"])
+        generated = pd.read_excel(result["buffer"], engine="openpyxl")
+        self.assertEqual(generated.loc[0, "TOT_CREDIT_POINTS"], 15.5)
+
 
 class MergeFilesTests(unittest.TestCase):
     def test_blank_update_values_preserve_master_fields(self):

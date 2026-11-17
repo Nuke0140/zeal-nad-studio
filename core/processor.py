@@ -234,8 +234,14 @@ def run_generate_report(input_file, log_func, progress_func=None, source_label=N
             nad["EXAM_TYPE"] = "Regular"
             nad["TERM_TYPE"] = "Odd"
             nad["TOT_CREDIT"] = row.get("Completed Credits") or row.get("Total Completed Credits")
-            nad["TOT_CREDIT_POINTS"] = ""
-            nad["CGPA"] = row.get("CGPA")
+            registered_credits = clean_number(row.get("Total Registered Credits"))
+            completed_credits = clean_number(row.get("Total Completed Credits"))
+            calculated_cgpa = row.get("CGPA")
+            nad["CGPA"] = (
+                calculated_cgpa
+                if registered_credits != "" and registered_credits == completed_credits
+                else ""
+            )
             nad["SGPA"] = row.get("SGPA")
 
             if nad["RESULT"] == "A. T. K. T":
@@ -255,7 +261,6 @@ def run_generate_report(input_file, log_func, progress_func=None, source_label=N
 
             student_subjects = []
             total_grade_points = 0.0
-            total_credit_points = 0.0
 
             for sub, cols in subject_map.items():
                 gp = clean_number(row.get(cols["grade_points"]))
@@ -265,14 +270,12 @@ def run_generate_report(input_file, log_func, progress_func=None, source_label=N
 
                 if gp != "":
                     total_grade_points += gp
-                if gp != "" and cr != "":
-                    total_credit_points += gp * cr
 
                 if grade or gp != "" or cr != "" or res:
                     student_subjects.append((sub, cols))
 
             nad["TOT_GRADE_POINTS"] = round(total_grade_points, 2) if total_grade_points > 0 else ""
-            nad["TOT_CREDIT_POINTS"] = round(total_credit_points, 2) if total_credit_points > 0 else ""
+            nad["TOT_CREDIT_POINTS"] = row.get("Semester Credit Points")
 
             # --- REVERSE THE ACTUAL SUBJECT ORDER FROM THE CSV: last subject becomes SUB1 ---
             student_subjects.reverse()

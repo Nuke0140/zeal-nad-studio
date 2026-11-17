@@ -7,7 +7,6 @@ st.markdown(..., unsafe_allow_html=True). All user-provided values are
 HTML-escaped before interpolation.
 """
 
-from datetime import datetime
 from html import escape
 
 
@@ -28,18 +27,8 @@ def fmt_size(n):
 def hero():
     return (
         '<div class="hero">'
-        '<div class="hero-badge"><span class="pd"></span>NAD COMPLIANT • ACADEMIC DEPOSITORY SUITE</div>'
         '<h1 class="hero-title">ZEAL <span class="grad">NAD DATA</span> PROCESSOR</h1>'
-        '<p class="hero-sub">Turn raw semester exports into depository-ready Excel in seconds — '
-        'generate NAD upload files with strict column sequencing, then merge re-exam updates back '
-        'into the master sheet. Everything runs locally inside your browser session.</p>'
-        '<div class="pills">'
-        '<span class="pill">⚡ CSV → NAD EXCEL</span>'
-        '<span class="pill">🔗 RE-EXAM MERGE ENGINE</span>'
-        '<span class="pill">🛡 TEXT-SAFE IDS</span>'
-        '<span class="pill">📊 LIVE INSIGHTS</span>'
-        '<span class="pill">🔒 100% CLIENT-SIDE</span>'
-        '</div></div>'
+        '</div>'
     )
 
 
@@ -51,19 +40,6 @@ def sidebar_logo():
         '<div class="zs">NAD DATA PROCESSOR • v2.0</div>'
         '<div class="side-status"><span class="pd"></span>ALL SYSTEMS OPERATIONAL</div>'
         '</div>'
-    )
-
-
-def sidebar_guide():
-    return (
-        '<div class="side-sec">QUICK GUIDE — GENERATE</div>'
-        '<div class="step"><span class="n">1</span><span>Upload the raw semester result <b>CSV</b> exported from the ERP.</span></div>'
-        '<div class="step"><span class="n">2</span><span>Hit <b>PROCESS FILE</b> — subjects auto-detect, reverse &amp; map to NAD slots.</span></div>'
-        '<div class="step"><span class="n">3</span><span>Download the NAD-ready Excel with <b>text-safe IDs</b>.</span></div>'
-        '<div class="side-sec">QUICK GUIDE — MERGE</div>'
-        '<div class="step"><span class="n">1</span><span>Upload the <b>odd-semester master</b> Excel.</span></div>'
-        '<div class="step"><span class="n">2</span><span>Upload the <b>re-exam update</b> Excel.</span></div>'
-        '<div class="step"><span class="n">3</span><span>Merge — re-exam values overwrite rows matching <b>REGN_NO + RROLL</b>.</span></div>'
     )
 
 
@@ -187,16 +163,4 @@ def terminal(logs, status="IDLE"):
         '<span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>'
         f'<span class="term-title">nad_processor — session.log</span>{badge}'
         f'</div><div class="term-body">{body}</div></div>'
-    )
-
-
-# ------------------------------------------------------------------ FOOTER
-def footer():
-    stamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-    return (
-        '<div class="app-foot">'
-        '<span>ZEAL NAD DATA PROCESSOR • v2.0 WEB</span>'
-        f'<span>SESSION {stamp}</span>'
-        '<span>CRAFTED BY <span class="cy">NIL</span> ⚡</span>'
-        '</div>'
     )

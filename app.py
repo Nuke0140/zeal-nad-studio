@@ -15,10 +15,9 @@ import pandas as pd
 import streamlit as st
 
 from core.processor import run_generate_report, run_merge_files
-from styles.blocks import (chips, error_box, file_chip, footer, fmt_size, hero,
-                           info_box, preview_table, sec_head, sidebar_credit,
-                           sidebar_guide, sidebar_logo, stat_cards, terminal,
-                           warn_box)
+from styles.blocks import (chips, error_box, file_chip, fmt_size, hero,
+                           preview_table, sec_head, sidebar_credit, sidebar_logo,
+                           stat_cards, terminal, warn_box)
 from styles.theme import get_palette, inject_css
 
 XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -40,7 +39,6 @@ with st.sidebar:
     st.markdown(sidebar_logo(), unsafe_allow_html=True)
     st.toggle("🌙  Dark Mode", value=dark_mode, key="dark_mode")
     st.markdown("<hr/>", unsafe_allow_html=True)
-    st.markdown(sidebar_guide(), unsafe_allow_html=True)
     st.markdown(sidebar_credit(), unsafe_allow_html=True)
 
 # ------------------------------------------------------------------
@@ -108,11 +106,6 @@ with tab_gen:
                         unsafe_allow_html=True)
 
         ready = not missing_core
-    else:
-        st.markdown(info_box("Upload the raw semester result CSV exported from your ERP. "
-                             "Subject columns are auto-detected from the header row — "
-                             "zero configuration needed."), unsafe_allow_html=True)
-
     st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
     run_gen = st.button("⚡  PROCESS FILE  —  GENERATE NAD EXCEL", key="gen_run",
                         type="primary", width="stretch", disabled=not ready)
@@ -229,10 +222,6 @@ with tab_merge:
                                           more_cols=max(len(odd_prev.columns) - 7, 0)),
                             unsafe_allow_html=True)
             odd_ready = not odd_missing
-        else:
-            st.markdown(info_box("Upload the master NAD Excel generated in Tab 1 "
-                                 "(or your previously merged master sheet)."), unsafe_allow_html=True)
-
     with mc2:
         st.markdown(sec_head("02", "RE-EXAM / UPDATE FILE"), unsafe_allow_html=True)
         re_up = st.file_uploader("Re-exam update", type=["xlsx"], key="re_up",
@@ -264,10 +253,6 @@ with tab_merge:
                                           more_cols=max(len(re_prev.columns) - 7, 0)),
                             unsafe_allow_html=True)
             re_ready = not re_missing
-        else:
-            st.markdown(info_box("Upload the re-exam result file — rows matching "
-                                 "REGN_NO + RROLL will overwrite the master."), unsafe_allow_html=True)
-
     st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
     run_mrg = st.button("🔗  MERGE DATA  —  OVERWRITE & CONSOLIDATE", key="merge_run",
                         type="tertiary", width="stretch",
@@ -347,8 +332,3 @@ with tab_merge:
                     st.session_state.pop(k, None)
                 st.rerun()
 
-# ------------------------------------------------------------------
-# FOOTER
-# ------------------------------------------------------------------
-st.markdown("<div style='height:26px'></div>", unsafe_allow_html=True)
-st.markdown(footer(), unsafe_allow_html=True)
